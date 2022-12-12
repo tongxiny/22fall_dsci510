@@ -42,7 +42,7 @@ python visualization.py
 
 ## Data Modification
 
-Raw data are modified according to different purposes, including correlation analysis, spacial visualization, and timeseries visualization.
+Raw data are modified according to different purposes, including regression analysis, spacial visualization, and timeseries visualization.
 
 ### Regression Analysis
 
@@ -85,7 +85,7 @@ At a significance level of 0.05, approximately 62.93% of variation in Total Deat
 
 ### Changes from Original Plan
 
-In the orginal plan, I decided to put all independent variables with p<0.05 into the linear regression model. But later I noticed that some indexes may be interrelated because of their calculating methods. For example, Government Response Index and Stringency Index overlapped a lot in sub-indicators, as both of them are aggregated figure. Therefore, I reduced the number of independent variables in the model to avoid inflation in coefficient of determination.
+In the orginal plan, I decided to put all independent variables with p<0.05 into the linear regression model. But later I noticed that some indexes may be interrelated because of their calculating methods. For example, Government Response Index and Stringency Index overlapped a lot in sub-indicators, as both of them are aggregated figures. Therefore, I reduced the number of independent variables in the model to avoid inflation in coefficient of determination.
 
 # Visualization
 
