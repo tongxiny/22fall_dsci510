@@ -12,6 +12,7 @@ The project explores the relationship between government policy responses and th
 * jsonschema 4.14.0
 * plotly 5.11.0
 * bokeh 3.0.2
+* scikit-learn 1.2.0
 
 # Installation
 
@@ -43,7 +44,7 @@ python visualization.py
 
 Raw data are modified according to different purposes, including correlation analysis, spacial visualization, and timeseries visualization.
 
-### Correlation Analysis
+### Regression Analysis
 
 To analyze the correlation between government policies and covid deaths/cases in China, I first filtered both datasets by location, then converted date column in both datasets to datetime format, dropped duplicates in date, inner joined two tables using location and date. Finally, I selected columns for correlation analysis in the merged dataframe and dropped rest columns. The description for modified data sample for correlation analysis is below.
 
@@ -67,18 +68,24 @@ In the original plan, I decided to analyze the merged covid and policy data cove
 
 # Methodology
 
-## Correlation Analysis
+## Regression Analysis
+
+### Methods
+Firstly, the analysis uses Pearson r to calculate linear correlation coefficients and p-values between indexes. All p<0.05 pairs are reported in the following table with the format of (coefficient, p-value). High-correlated pairs are highlighted as red cells. It displays that total deaths and total cases have significant positive impacts on the government response level, containment and health policies, and economic support level. Secondly, I ran a regression model with total deaths as dependent variable and other significant index as independent variables. The results are shown below.
+
+<img width="2149" alt="image" src="https://user-images.githubusercontent.com/111823275/207120224-f7c133b1-e381-4fa1-a220-c9988795a73a.png">
+
+<img width="664" alt="Screen Shot 2022-12-12 at 10 06 14 AM" src="https://user-images.githubusercontent.com/111823275/207120980-6447b184-7871-43d8-b6c0-1243cc451ee9.png">
 
 ### Conclusion
 
-Total deaths and total cases have significant positive impacts on the government response level, containment and health policies, and economic support level.
+Total Deaths = -9417.75 * Government Response Index + 8243.02 * Containment Health Index + 1206.35 * Economic Support Index + 0.00057 * Total Cases + 2872.52
 
-### Methods
-The analysis uses Pearson r to calculate linear correlation coefficients and p-values between indexes. All p<0.05 pairs are reported in the following table with the format of (coefficient, p-value). High-correlated pairs are highlighted as red cells.
+At a significance level of 0.05, approximately 62.93% of variation in Total Deaths can be explained by Government Response Index, Containment Health Index, Economic Support Index and Total cases as a whole, among which, Government Response Index has the strongest negative impact on Total Deaths. Containment Health Index and Economic Support Index have significant positive impact on Total deaths, while Total Cases has hardly any impact on Total Deaths.
 
-### Report
+### Changes from Original Plan
 
-<img width="526" alt="image" src="https://user-images.githubusercontent.com/111823275/206634752-c50059c2-325c-4987-8ce2-e64435fd8023.png">
+In the orginal plan, I decided to put all independent variables with p<0.05 into the linear regression model. But later I noticed that some indexes may be interrelated because of their calculating methods. For example, Government Response Index and Stringency Index overlapped a lot in sub-indicators, as both of them are aggregated figure. Therefore, I reduced the number of independent variables in the model to avoid inflation in coefficient of determination.
 
 # Visualization
 
@@ -106,9 +113,6 @@ The line chart visualizes the time series data of the Government Response Index 
 
 Government Response Index is an aggregated number from 0 to 100 that reflects all indicators in the fields of containment and closure, economic, health system, vaccination, and miscellaneous policies. The interactive line chart shows that many countries took same level of government response to covid during certain periods despite that the spread of epidemic varied between countries at these time. For example, from 2020/02/28 to 2020/04/09, all countries significantly strengthened epidemic prevention policies simultaneously. However, at that time, covid hadn't become prevailing outside of China. This implies that other countries qucikly adopted Chinese policies at the beginning of covid. In contrast, from 2021 till now, most countries are easing their covid policy with China as the only exception. The chart vividly illustrates the adoption, easing and reimposition of covid policies among governments which is a critical pointcut for future researchers.
 
-### Methods
-
-
 # Future Work
 
-I would like to improve the analysis part in my project given more time. I conducted a simple correlation analysis in this project. In the future,
+I would like to improve the analysis part in my project given more time. In this project, I conducted a regression analysis which described the relation between deaths and various government policies, but the regression result was counter-intuitive. In the original plan, my hypothesis was that all indexes should have negative impacts on the number of total covid deaths, but it turned out that only Government Response Index reduced the dependent variable. I wanted to examine the independent variables and applied further analysis to determine whether there were other flaws in this model that I neglected, like multicollinearity.
