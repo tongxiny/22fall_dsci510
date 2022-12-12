@@ -8,6 +8,7 @@ owid_url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
 gvmt_url = "https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_nat_latest.csv"
 from scipy.stats import pearsonr
 import numpy as np
+from sklearn.linear_model import LinearRegression
 np.set_printoptions(suppress=True)
 
 def corr_pval(df):
@@ -20,11 +21,10 @@ def corr_pval(df):
                     corr_pval_df.iloc[i, c] = (cor, p)
             except:
                 pass
-    corr_pval_df.to_csv("hw4_correlation.csv")
+    corr_pval_df.to_csv("final_correlation.csv")
     return corr_pval_df
 
-
-if __name__ == '__main__':
+def get_df(gvmt_url, owid_url):
     df_gvmt = pd.read_csv(gvmt_url, engine='python')
     df_owid = pd.read_csv(owid_url, engine='python')
     df1 = df_gvmt.loc[df_gvmt['CountryName'] == 'China', :]
@@ -35,5 +35,21 @@ if __name__ == '__main__':
     df1['Date'] = pd.to_datetime(df1['Date'].astype(str), format='%Y%m%d')
     df2['date'] = pd.to_datetime(df2['date'].astype(str), format='%Y-%m-%d')
     df = pd.merge(df1, df2, how='inner', left_on=['CountryName', 'Date'], right_on=['location', 'date'])
-    df3 = df.drop(['date', 'Date', 'CountryName', 'location'], axis=1)
-    print(corr_pval(df3))
+    return df
+
+def regression(df):
+    y = df[['total_deaths']]
+    x = df[['GovernmentResponseIndex_Average_ForDisplay','ContainmentHealthIndex_Average_ForDisplay','EconomicSupportIndex_ForDisplay','total_cases']]
+    model = LinearRegression().fit(x,y)
+    r_sq = model.score(x, y)
+    print(f"coefficient of determination: {r_sq}")
+    print(f"intercept: {model.intercept_}")
+    print(f"coefficients: {model.coef_}")
+    return
+if __name__ == '__main__':
+    df = get_df(gvmt_url,owid_url)
+    df = df.drop(['date', 'Date', 'CountryName', 'location'], axis=1)
+    df3.describe().to_csv("sample_for_correlation_analysis.csv")
+    regression(df)
+    print(corr_pval(df))
+
