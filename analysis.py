@@ -21,7 +21,7 @@ def corr_pval(df):
                     corr_pval_df.iloc[i, c] = (cor, p)
             except:
                 pass
-    corr_pval_df.to_csv("final_correlation.csv")
+    #corr_pval_df.to_csv("final_correlation.csv")
     return corr_pval_df
 
 def get_df(gvmt_url, owid_url):
@@ -49,7 +49,6 @@ def regression(df):
 if __name__ == '__main__':
     df = get_df(gvmt_url,owid_url)
     df = df.drop(['date', 'Date', 'CountryName', 'location'], axis=1)
-    df3.describe().to_csv("sample_for_correlation_analysis.csv")
+    df.to_csv("final_sample_data.csv")
     regression(df)
     print(corr_pval(df))
-
